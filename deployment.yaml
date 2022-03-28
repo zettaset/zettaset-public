@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zts-cmc
+  labels:
+    app: zts-cmc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zts-cmc
+  template:
+    metadata:
+      labels:
+        app: zts-cmc
+    spec:
+      containers:
+      - name: zts-cmc
+        image: zettasetimg/test:zts-acm-application-0.0.2_commitid-8b8230
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      imagePullSecrets:
+        - name: zts-dockerhub-token 
