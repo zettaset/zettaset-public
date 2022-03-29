@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zts-cmc-hub
+spec:
+  containers:
+  - name: zts-cmc-hub
+    image: zettasetimg/test:zts-acm-cli-0.0.2_commitid-a57626
+    ports:
+    - containerPort: 8080
+    imagePullPolicy: Always
+  imagePullSecrets:
+    - name: zts-dockerhub-token
