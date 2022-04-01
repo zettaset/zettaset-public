@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: zts-cmc-hub
-    image: zettasetimg/test:zts-acm-cli-0.0.2_commitid-55fbea
+    image: zettasetimg/test:zts-acm-cli-0.0.2_commitid-28202c
     ports:
     - containerPort: 8080
     imagePullPolicy: Always
