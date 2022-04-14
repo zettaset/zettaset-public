@@ -1,0 +1,12 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: zts-cmc-app-placement
+  namespace: default 
+  labels:
+    app: zts-cmc-app
+spec:
+  clusterReplicas: 1
+  clusterSelector:
+    matchLabels:
+      environment: dev

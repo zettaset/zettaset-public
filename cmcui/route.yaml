@@ -1,0 +1,16 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: zts-cmc-app-route
+  labels:
+    app: zts-cmc-app
+spec:
+  to:
+    kind: Service
+    name: zts-cmc-app-svc
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
