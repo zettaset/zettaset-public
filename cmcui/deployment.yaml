@@ -20,11 +20,5 @@ spec:
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
-        env:
-          - name: "REPLACEIP"
-            value: "54.237.225.68"
-        command:
-          - /etc/nginx/zts-restart-config.sh
-          - "$(REPLACEIP)"
       imagePullSecrets:
         - name: zts-dockerhub-token
