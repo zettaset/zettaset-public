@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: zts-cmc
-        image: zettasetimg/test:zts-acm-application-0.0.2_commitid-dda4b7
+        image: zettasetimg/test:zts-acm-application-0.0.2_commitid-8b8230
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
