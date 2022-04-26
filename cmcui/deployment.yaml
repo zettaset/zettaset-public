@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: zts-cmc-app
-  replicas: 1 
+  replicas: 1
   template:
     metadata:
       labels:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: zts-cmc
-        image: zettasetimg/test:zts-acm-application-0.0.2_commitid-073c07
+        image: zettasetimg/test:zts-acm-application-0.0.2_commitid-8b8230
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
