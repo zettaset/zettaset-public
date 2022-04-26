@@ -19,6 +19,6 @@ spec:
         image: zettasetimg/test:zts-acm-web-application-0.0.2_commitid-073c07 
         ports:
         - containerPort: 8080
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
       imagePullSecrets:
         - name: zts-dockerhub-token
