@@ -5,7 +5,7 @@ metadata:
   labels:
     app: zts-cmc
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: zts-cmc
