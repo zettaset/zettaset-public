@@ -11,7 +11,7 @@ metadata:
   namespace: default
 spec:
   type: Git
-  pathname: https://github.com/mahesh-zetta/zettaset-public
+  pathname: https://github.com/zettaset-public
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
