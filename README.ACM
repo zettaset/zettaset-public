@@ -1,0 +1,51 @@
+<p class="hft-paras">Steps to Deploy ZTS-CMC-APP</p>
+
+<p class="hft-paras">1) RHACM configuration:</p>
+
+<p class="hft-paras">RHACM Gui</p>
+
+<p class="hft-paras">Click on Applications
+Application Name:  zts-cmc
+Namespace: default
+Repository location for resource
+ Repository types : Git
+URL:  https://github.com/zettaset/zettaset-public
+Branch: main
+Path: zts-cmc-app
+Check: Deploy application resources only on clusters matching specified labels
+Label:  environment
+Value:  dev</p>
+
+<p class="hft-paras">Save the Configuration.</p>
+
+<p class="hft-paras">This will create the application UI on RHACM.</p>
+
+<p class="hft-paras">Alternatively, the zts-cmc Application can be configured using CLI
+URL:  https://github.com/zettaset/zettaset-public</p>
+
+<p class="hft-paras">git clone https://github.com/zettaset/zettaset-public</p>
+
+<p class="hft-paras">oc apply -f /path/zts-cmc-rhacm/application.yaml
+ </p>
+
+<p class="hft-paras">2)  Run the configmap reloader on the managed cluster
+    oc apply -f
+https://raw.githubusercontent.com/stakater/Reloader/master/deployments/kubernetes/reloader.yaml
+    This starts a pod on the managed cluster that automatically restarts the zts-cmc pod when the config map changes.</p>
+
+<p class="hft-paras">3) Policy for Deployment of Application</p>
+
+<p class="hft-paras">Deploy the zts-cmc-app from the Governance menu using the policy file contents
+ policy-zts-cmc-deployment.yaml.</p>
+
+<p class="hft-paras">This policy is set to inform.  If the ConfigMap required by the Application has the correct values,
+then the configmap policy will be in Compliance. If the reloader has been started that too should be in compliance. </p>
+
+<p class="hft-paras">4) Change policy-zts-cmc from inform to enforce if step 3 checks out okay for the configmap part</p>
+
+<p class="hft-paras">Once the policy is changed to enforce, the entire policy policy-zts-cmc will become
+compliant.</p>
+
+<p class="hft-paras">5) When changing the IP Address of the CMC Server, use the github resources to change the configmap.yaml.  
+Then Sync the changes on the Application in RHACM using the Sync button.  Changing the Ip Address of 
+the CMC Server on RHACM directly will be overwritten by the automatic sync that happens every few minutes.</p>
