@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2022.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">Steps to Deploy ZTS-CMC-APP</span></p>
+<p class="p1"><span class="s1">1) RHACM configuration:</span></p>
+<p class="p1"><span class="s1">RHACM Gui</span></p>
+<p class="p1"><span class="s1">Click on Applications<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Application Name: zts-cmc<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Namespace: default<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Repository location for resource<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Repository types : Git<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">URL: https://github.com/zettaset/zettaset-public<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Branch: main<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Path: zts-cmc-app<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Check: Deploy application resources only on clusters matching specified labels<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Label: environment Value: dev</span></p>
+<p class="p1"><span class="s1">Save the Configuration.</span></p>
+<p class="p1"><span class="s1">This will create the application UI on RHACM.</span></p>
+<p class="p1"><span class="s1">Alternatively, the zts-cmc Application can be configured using CLI<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">URL: https://github.com/zettaset/zettaset-public</span></p>
+<p class="p1"><span class="s1">git clone https://github.com/zettaset/zettaset-public</span></p>
+<p class="p1"><span class="s1">oc apply -f /path/zts-cmc-rhacm/application.yaml<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">2) Run the configmap reloader on the managed cluster<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">oc apply -f https://raw.githubusercontent.com/stakater/Reloader/master/deployments/kubernetes/reloader.yaml<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">This starts a pod on the managed cluster that automatically restarts the zts-cmc pod when the config map changes.</span></p>
+<p class="p1"><span class="s1">3) Policy for Deployment of Application</span></p>
+<p class="p1"><span class="s1">Deploy the zts-cmc-app from the Governance menu using the policy file contents policy-zts-cmc-deployment.yaml.</span></p>
+<p class="p1"><span class="s1">This policy is set to inform. If the ConfigMap required by the Application has the correct values,<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">then the configmap policy will be in Compliance.<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">If the reloader has been started that too should be in compliance.<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">4) Change policy-zts-cmc from inform to enforce if step 3 checks out okay for the configmap part</span></p>
+<p class="p1"><span class="s1">Once the policy is changed to enforce, the entire policy policy-zts-cmc will become compliant.</span></p>
+<p class="p1"><span class="s1">5) When changing the IP Address of the CMC Server, use the github resources to change the configmap.yaml.<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Then Sync the changes on the Application in RHACM using the Sync button.<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Changing the Ip Address of the CMC Server on RHACM directly will be overwritten by the automatic sync<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">that happens every few minutes.</span></p>
+</body>
+</html>
