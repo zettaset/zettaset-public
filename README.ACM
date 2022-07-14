@@ -1,10 +1,10 @@
-<p class="hft-paras">Steps to Deploy ZTS-CMC-APP</p>
+Steps to Deploy ZTS-CMC-APP
 
-<p class="hft-paras">1) RHACM configuration:</p>
+1) RHACM configuration:
 
-<p class="hft-paras">RHACM Gui</p>
+RHACM Gui
 
-<p class="hft-paras">Click on Applications
+Click on Applications
 Application Name:  zts-cmc
 Namespace: default
 Repository location for resource
@@ -14,38 +14,41 @@ Branch: main
 Path: zts-cmc-app
 Check: Deploy application resources only on clusters matching specified labels
 Label:  environment
-Value:  dev</p>
+Value:  dev
 
-<p class="hft-paras">Save the Configuration.</p>
+Save the Configuration.
 
-<p class="hft-paras">This will create the application UI on RHACM.</p>
+This will create the application UI on RHACM.
 
-<p class="hft-paras">Alternatively, the zts-cmc Application can be configured using CLI
-URL:  https://github.com/zettaset/zettaset-public</p>
+Alternatively, the zts-cmc Application can be configured using CLI
+URL:  https://github.com/zettaset/zettaset-public
 
-<p class="hft-paras">git clone https://github.com/zettaset/zettaset-public</p>
+git clone https://github.com/zettaset/zettaset-public
 
-<p class="hft-paras">oc apply -f /path/zts-cmc-rhacm/application.yaml
- </p>
+oc apply -f /path/zts-cmc-rhacm/application.yaml
+ 
 
-<p class="hft-paras">2)  Run the configmap reloader on the managed cluster
+2)  Run the configmap reloader on the managed cluster
     oc apply -f
 https://raw.githubusercontent.com/stakater/Reloader/master/deployments/kubernetes/reloader.yaml
-    This starts a pod on the managed cluster that automatically restarts the zts-cmc pod when the config map changes.</p>
+    This starts a pod on the managed cluster that automatically restarts the zts-cmc pod when the config map changes.
 
-<p class="hft-paras">3) Policy for Deployment of Application</p>
 
-<p class="hft-paras">Deploy the zts-cmc-app from the Governance menu using the policy file contents
- policy-zts-cmc-deployment.yaml.</p>
+3) Policy for Deployment of Application
 
-<p class="hft-paras">This policy is set to inform.  If the ConfigMap required by the Application has the correct values,
-then the configmap policy will be in Compliance. If the reloader has been started that too should be in compliance. </p>
+Deploy the zts-cmc-app from the Governance menu using the policy file contents
+ policy-zts-cmc-deployment.yaml.
 
-<p class="hft-paras">4) Change policy-zts-cmc from inform to enforce if step 3 checks out okay for the configmap part</p>
+This policy is set to inform.  If the ConfigMap required by the Application has the correct values,
+then the configmap policy will be in Compliance. If the reloader has been started that too should be in compliance. 
 
-<p class="hft-paras">Once the policy is changed to enforce, the entire policy policy-zts-cmc will become
-compliant.</p>
+4) Change policy-zts-cmc from inform to enforce if step 3 checks out okay for the configmap part
 
-<p class="hft-paras">5) When changing the IP Address of the CMC Server, use the github resources to change the configmap.yaml.  
+Once the policy is changed to enforce, the entire policy policy-zts-cmc will become
+compliant.
+
+5) When changing the IP Address of the CMC Server, use the github resources to change the configmap.yaml.  
 Then Sync the changes on the Application in RHACM using the Sync button.  Changing the Ip Address of 
-the CMC Server on RHACM directly will be overwritten by the automatic sync that happens every few minutes.</p>
+the CMC Server on RHACM directly will be overwritten by the automatic sync that happens every few minutes.
+
+
