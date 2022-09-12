@@ -97,7 +97,7 @@ Validate XCrypt
    The claim defines size and storage class to be used
    $ oc create -f claim.yaml
 
-Note:  If you using the Application below, a claim does not need
+Note:  If you are using the Application below, a claim does not need
    to be created, as the application creates it.
 
 6)  Create an application from RHACM 
