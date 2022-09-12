@@ -1,0 +1,116 @@
+
+Preinstallation:
+
+Please contact Zettaset for install secrets
+for docker-hub images and zts.conf.
+
+2)  Label the nodes
+
+
+This does the following:
+1.3. Apply labels to worker nodes:
+   $ oc get nodes|grep worker
+   ip-10-0-143-90.us-east-2.compute.internal    Ready      worker   110d   v1.19.0+e49167a
+   ip-10-0-190-63.us-east-2.compute.internal    Ready      worker   110d   v1.19.0+e49167a
+   ip-10-0-207-48.us-east-2.compute.internal    Ready      worker   110d   v1.19.0+e49167a
+
+   Apply labels to nodes:
+   $ oc label nodes ip-10-0-143-90.us-east-2.compute.internal zts=zts-master
+   $ oc label nodes ip-10-0-190-63.us-east-2.compute.internal zts=zts-worker
+   $ oc label nodes ip-10-0-207-48.us-east-2.compute.internal zts=zts-worker
+
+   Note: we recommend to apply zts labels (even zts-master) to worker cluster roles only.
+
+Installation:
+
+When installing the governance policy we need to switch from inform to
+enforce to push the policies on to the managed clusters.
+
+1.  Install RBAC Governance Policy
+oc apply -f /PATH/policy-zts-xcrypt-rbac.yaml
+
+2. Deploy Xcrypt using the Governance Policy
+oc apply -f /PATH/policy-zts-xcrypt-deployment.yaml 
+
+Change the policy from inform to enforce.
+
+Wait for all the Pods to be running on the Managed Clusters.
+e.g:  oc get pods -n zts-xcrypt | grep -i running 
+
+Post Installation:
+This is a manual step.  This step is from the existing README for Poc of XCrypt
+
+1) Configure license on the Managed Cluster
+  $ oc get pods -n zts-xcrypt | grep zts-masterset-hm
+
+  Add each host manager to license server
+  $ oc exec -it zts-masterset-ls-7rj89  -n zts-xcrypt -- /usr/share/zts/bin/edit_nodes.sh \
+       -a zts-masterset-hm-ds6bf
+
+2) Configure host manager
+
+   Determine service IP of the KMIP server:
+
+   $ oc describe service zts-kmipserver-service -n zts-xcrypt| grep IP
+ 
+   Modify /etc/hosts:
+   - Add the KMIP server entry to  file on the Host Manager
+     using the value obtained in previous step
+
+     <kmip-service-ip>          zts-kmip-server
+
+   - Modify the Host Manager entry in the
+     <host-manager-ip>  <host-manager-pod>      zts-host-manager
+     Note that both <host-manager-ip> and <host-manager-pod> are already defined in the /etc/hosts,  
+     just add 'zts-host-manager' to the entry
+ 
+3) Perform basic connectivity test
+   Connect to Host Manager:
+
+   $ oc exec -it zts-host-manager-pod /bin/bash
+
+   Run sample KMIP request to get non-existing key:
+
+   $ /usr/share/zts/bin/kmipclient get abcdef
+
+   You should get "Unknown key ... or insufficient permissions" error. This
+   will indicate that Host Manager can securely communicate with the
+   Key Manager and the License Server containers.
+
+4)  Add a block device to both host managers
+ Note: if this installation is for Ceph RBD storage, please skip this step
+
+   $ oc exec -it <HM_POD_NAME> -n zts-xcrypt -- /usr/share/zts/bin/add_device.sh -d <BLOCK_DEVICE_PATH> -s <SLICING_FACTOR>
+   Example:
+   $ oc exec -it zts-masterset-hm-59wzm -n zts-xcrypt -- /usr/share/zts/bin/add_device.sh -d /dev/sdc -s 15
+   WARNING: please replace the device with a block device on your environment. The add-device command cleans the device before partitioning, if there is any data on the device it will be lost.
+
+5) Validate XCrypt
+
+Validate XCrypt
+---------------
+5.1. Add Zettaset storageclass
+   To add 'zts-sc' Storage Class use following command:
+   $ oc create -f sc.yaml
+
+5.2. Submit a claim 'zts-claim'
+   The claim defines size and storage class to be used
+   $ oc create -f claim.yaml
+
+Note:  If you using the Application below, a claim does not need
+   to be created, as the application creates it.
+
+6)  Create an application from RHACM 
+    Application: mariadb
+    Namespace: mariadb
+    Git: 	https://github.com/mahesh-zetta/rhacm-demo.git
+    Branch: master
+    Cluster label: environment 
+    Cluster label value: dev
+    
+    Note the encryption on the mariadb pod
+e.g:
+
+[docker@localhost managed]$ oc exec -it mariadb-5f7b6fc68d-88z4r -n mariadb -- df | grep zts
+/dev/mapper/zts--vg--629eaf40--6ebe--45c7--a5e6--04590219f8fc-zts-lv-353ba887-0f2a-4cf4-90fd-9042010c50ad   7236672    32892   6813124   1% /mnt/data
+ 
