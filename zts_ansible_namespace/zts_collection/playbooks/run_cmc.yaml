@@ -1,0 +1,22 @@
+- name: Run script on remote host
+  hosts: remote
+  gather_facts: no
+  become: yes
+
+  vars:
+   arg1: "arg1_default_value"
+
+  tasks:
+    - name: Copy script to remote host
+      copy:
+        src: run_script.sh
+        dest: /home/ec2-user/run_script.sh
+        mode: '0755'
+
+    - name: Execute script on remote host
+      register: script_output
+      shell: /home/ec2-user/run_script.sh "{{ arg1 }}"
+
+    - name: Display script output
+      debug:
+        var: script_output.stdout_lines
