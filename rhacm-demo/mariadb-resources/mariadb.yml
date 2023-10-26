@@ -1,0 +1,67 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: zts-sc
+  namespace: zts-xcrypt
+provisioner: zts.csi.zettaset.com
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zts-claim1
+  namespace: zts-xcrypt
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: zts-sc 
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+    type: database
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        type: database
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: zts-worker
+                operator: In
+                values:
+                - "true"
+      containers:
+        - name: mariadb
+          image: bitnami/mariadb:latest
+          ports:
+            - containerPort: 3306
+              name: db-port
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb
+                  key: MYSQL_ROOT_PASSWORD
+          volumeMounts:
+          - name: existingvolumename
+            mountPath: "/mnt/data"
+      volumes:
+      - name: existingvolumename
+        persistentVolumeClaim:
+          claimName: zts-claim1
