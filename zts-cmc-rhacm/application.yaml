@@ -1,18 +1,3 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: default
----
-apiVersion: apps.open-cluster-management.io/v1
-kind: Channel
-metadata:
-  name: zts-cmc-gitops
-  namespace: default
-spec:
-  type: Git
-  pathname: https://github.com/zettaset/zettaset-public
----
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
@@ -24,7 +9,7 @@ spec:
       status: "True"
   clusterSelector:
     matchLabels:
-      environment: dev
+      cmc: "true"
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
@@ -46,7 +31,7 @@ spec:
 apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
-  name: zts-cmc
+  name: zts-cmc-app
   namespace: default
 spec:
   componentKinds:
