@@ -5,7 +5,7 @@ metadata:
 data:
   application.properties: |-
     Application = zts_cmc
-    CMC_SERVER_IP = 34.229.227.152
+    CMC_SERVER_IP = 18.117.145.208
     CMC_SERVER_PORT = 8443
     User = system
     Password = manager
